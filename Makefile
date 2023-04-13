@@ -5,3 +5,7 @@ up:
 
 down:
 	$(DOCKER_COMPOSE) down
+
+
+shell:
+	$(DOCKER_COMPOSE) run backend bash

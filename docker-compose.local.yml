@@ -15,5 +15,6 @@ services:
       - .env
     volumes:
       - ./dist:/app/dist
+      - ./prisma:/app/prisma
     ports:
       - "3000:3000"
