@@ -3,19 +3,25 @@ import fjwt from '@fastify/jwt';
 import fastify from 'fastify';
 import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 
+import * as authConstants from './constants/auth.constants';
 import authRoutes from './routes/auth.routes';
 import userRoutes from './routes/user.routes';
 import { authSchemas } from './schema/auth.schema';
 import { userSchemas } from './schema/user.schema';
+import { SIGNING_SECRET } from './settings';
 
 export const createServer = (): FastifyInstance => {
   const server = fastify({ logger: true });
 
   server.register(fjwt, {
-    secret: 'secret',
+    secret: SIGNING_SECRET,
+    cookie: {
+      cookieName: authConstants.ACCESS_TOKEN_COOKIE_NAME,
+      signed: true,
+    },
   });
   server.register(fcookie, {
-    secret: 'secret',
+    secret: SIGNING_SECRET,
   });
 
   server.decorate('auth', async (request: FastifyRequest, reply: FastifyReply) => {
