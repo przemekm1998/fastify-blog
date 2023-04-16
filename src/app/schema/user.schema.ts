@@ -10,21 +10,16 @@ const userCore = {
     .email(),
   name: z.string(),
 };
+const userRead = { ...userCore, id: z.number() };
+const userCreate = { ...userCore, password: z.string() };
 
-const readUserSchema = z.object({
-  ...userCore,
-  id: z.number(),
-});
-
-const createUserSchema = z.object({
-  ...userCore,
-  password: z.string(),
-});
+export const readUserSchema = z.object({ ...userRead });
+const createUserSchema = z.object({ ...userCreate });
 
 export type CreateUserSchemaInput = z.infer<typeof createUserSchema>;
 export type ReadUserSchema = z.infer<typeof readUserSchema>;
 
-export const { schemas: userSchemas, $ref } = buildJsonSchemas(
+export const { schemas: userSchemas, $ref, } = buildJsonSchemas(
   {
     createUserSchema,
     readUserSchema,

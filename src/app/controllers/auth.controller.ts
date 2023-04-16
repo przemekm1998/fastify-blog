@@ -26,6 +26,7 @@ export const loginHandler = async (
         httpOnly: true,
         sameSite: true,
         maxAge: ACCESS_TOKEN_COOKIE_MAX_AGE,
+        path: '/',
       })
       .send({ accessToken: accessToken });
   } catch (e) {
