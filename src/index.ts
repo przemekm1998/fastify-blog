@@ -1,10 +1,6 @@
-import fastify from 'fastify';
+import { createServer } from './app/app';
 
-const server = fastify({ logger: true });
-
-server.get('/', async (request, reply) => {
-  return { hello: 'world' };
-});
+const server = createServer();
 
 server.listen({ port: 3000, host: '0.0.0.0' }, (err, address) => {
   if (err) {
