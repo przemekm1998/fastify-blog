@@ -1,6 +1,6 @@
 import { FastifyInstance } from 'fastify';
 
-import { registerUserHandler } from '../controllers/user.controller';
+import { listUsersHandler, registerUserHandler } from '../controllers/user.controller';
 import { $ref } from '../schema/user.schema';
 
 export default async (server: FastifyInstance) => {
@@ -14,4 +14,6 @@ export default async (server: FastifyInstance) => {
     },
     registerUserHandler
   );
+
+  server.get('/', { preHandler: [server.auth] }, listUsersHandler);
 };

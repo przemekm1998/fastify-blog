@@ -10,6 +10,12 @@ import { authSchemas } from './schema/auth.schema';
 import { userSchemas } from './schema/user.schema';
 import { SIGNING_SECRET } from './settings';
 
+declare module 'fastify' {
+  export interface FastifyInstance {
+    auth: any;
+  }
+}
+
 export const createServer = (): FastifyInstance => {
   const server = fastify({ logger: true });
 
