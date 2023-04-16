@@ -4,32 +4,35 @@ import fastify from 'fastify';
 import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 
 import * as authConstants from './constants/auth.constants';
-import authRoutes from './routes/auth.routes';
-import userRoutes from './routes/user.routes';
-import { authSchemas } from './schema/auth.schema';
-import { userSchemas } from './schema/user.schema';
+import { authRoutes, productRoutes, userRoutes } from './routes';
+import { authSchemas, productSchemas, userSchemas } from './schema';
 import { SIGNING_SECRET } from './settings';
-
-declare module 'fastify' {
-  export interface FastifyInstance {
-    auth: any;
-  }
-}
 
 export const createServer = (): FastifyInstance => {
   const server = fastify({ logger: true });
 
+  registerPlugins(server);
+  registerDecorators(server);
+  registerSchemas(server);
+  registerRoutes(server);
+
+  return server;
+};
+
+const registerPlugins = (server: FastifyInstance): void => {
   server.register(fjwt, {
     secret: SIGNING_SECRET,
     cookie: {
       cookieName: authConstants.ACCESS_TOKEN_COOKIE_NAME,
-      signed: true,
+      signed: false,
     },
   });
   server.register(fcookie, {
     secret: SIGNING_SECRET,
   });
+};
 
+const registerDecorators = (server: FastifyInstance): void => {
   server.decorate('auth', async (request: FastifyRequest, reply: FastifyReply) => {
     try {
       await request.jwtVerify();
@@ -37,20 +40,22 @@ export const createServer = (): FastifyInstance => {
       return reply.send(e);
     }
   });
+};
 
-  const schemas = [userSchemas, authSchemas];
+const registerSchemas = (server: FastifyInstance): void => {
+  const schemas = [...userSchemas, ...authSchemas, ...productSchemas];
+
   for (const schema of schemas) {
-    for (const s of schema) {
-      server.addSchema(s);
-    }
+    server.addSchema(schema);
   }
+};
 
+const registerRoutes = (server: FastifyInstance): void => {
   server.get('/health', async () => {
     return { status: 'OK' };
   });
 
   server.register(userRoutes, { prefix: 'users' });
   server.register(authRoutes, { prefix: 'auth' });
-
-  return server;
+  server.register(productRoutes, { prefix: 'products' });
 };

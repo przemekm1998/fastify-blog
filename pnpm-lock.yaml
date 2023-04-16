@@ -7,6 +7,9 @@ dependencies:
   '@fastify/jwt':
     specifier: ^6.7.1
     version: 6.7.1
+  '@fastify/swagger':
+    specifier: ^8.3.1
+    version: 8.3.1
   '@prisma/client':
     specifier: ^4.12.0
     version: 4.12.0(prisma@4.12.0)
