@@ -1,6 +1,6 @@
 import { createServer } from './app/app';
 
-const server = createServer();
+export const server = createServer();
 
 server.listen({ port: 3000, host: '0.0.0.0' }, (err, address) => {
   if (err) {
